@@ -1,5 +1,6 @@
-package com.titan.tech.Satisfactory.api;
+package com.tech.titan.satisfactory.api;
 
+import com.tech.titan.satisfactory.api.model.Item;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

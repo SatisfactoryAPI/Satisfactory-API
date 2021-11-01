@@ -43,7 +43,6 @@ public class Building implements Serializable {
 
     @Enumerated(EnumType.ORDINAL)
     @JoinColumn(name = "building_type_id", referencedColumnName = "building_type_id")
-
     public BuildingType getBuildingType() {
         return buildingType;
     }

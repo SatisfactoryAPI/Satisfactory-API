@@ -1,8 +1,9 @@
-package com.tech.titan.satisfactory.api.exception;
+package com.tech.titan.satisfactory.api.exception.contract;
 
 
+import com.tech.titan.satisfactory.api.model.Item;
 
-public abstract class NotFoundException extends RuntimeException{
+public class NotFoundException extends RuntimeException{
 
     public NotFoundException(){
         super("The requested resource was not found");

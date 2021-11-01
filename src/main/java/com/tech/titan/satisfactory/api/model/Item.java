@@ -2,6 +2,7 @@ package com.tech.titan.satisfactory.api.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "items", uniqueConstraints = {
@@ -26,6 +27,11 @@ public class Item implements Serializable {
         this.itemType = itemType;
     }
 
+    public Item(Integer itemId, String name, ItemType itemType) {
+        this.itemId = itemId;
+        this.name = name;
+        this.itemType = itemType;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,5 +61,27 @@ public class Item implements Serializable {
 
     public void setItemType(ItemType itemType) {
         this.itemType = itemType;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "itemId=" + itemId +
+                ", name='" + name + '\'' +
+                ", itemType=" + itemType +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(itemId, item.itemId) && Objects.equals(name, item.name) && itemType == item.itemType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemId, name, itemType);
     }
 }

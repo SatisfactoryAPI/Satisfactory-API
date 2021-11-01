@@ -1,8 +1,9 @@
 package com.tech.titan.satisfactory.api.exception;
 
+import com.tech.titan.satisfactory.api.exception.contract.NotFoundException;
 import com.tech.titan.satisfactory.api.model.Item;
 
-public class ItemNotFoundException extends NotFoundException{
+public class ItemNotFoundException extends NotFoundException {
 
     public ItemNotFoundException(){
 

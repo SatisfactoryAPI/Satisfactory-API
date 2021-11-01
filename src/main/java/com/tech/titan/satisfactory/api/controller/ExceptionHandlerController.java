@@ -1,6 +1,6 @@
 package com.tech.titan.satisfactory.api.controller;
 
-import com.tech.titan.satisfactory.api.exception.NotFoundException;
+import com.tech.titan.satisfactory.api.exception.contract.NotFoundException;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

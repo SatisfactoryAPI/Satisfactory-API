@@ -1,10 +1,10 @@
 package com.tech.titan.satisfactory.api.controller;
 
-import com.tech.titan.satisfactory.api.exception.ItemNotFoundException;
+import com.tech.titan.satisfactory.api.controller.contract.SearchableController;
+import com.tech.titan.satisfactory.api.controller.contract.TypeSearchController;
 import com.tech.titan.satisfactory.api.model.Item;
 import com.tech.titan.satisfactory.api.model.ItemType;
 import com.tech.titan.satisfactory.api.service.ItemService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @RestController()
 @CrossOrigin("*")
 @RequestMapping("/items")
-public class ItemController {
+public class ItemController extends SearchableController<Item> implements TypeSearchController<Item, ItemType> {
 
     private final ItemService itemService;
 
@@ -22,44 +22,44 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    @GetMapping
-    public List<Item> getAllItems(){
-        return itemService.getAllItems();
+    @Override
+    public Item getByName(String name) {
+        return itemService.findByName(name);
     }
 
-    @GetMapping("/{id}")
-    public Item getItemById(@PathVariable Integer id){
-        return itemService.findItemById(id);
+    @Override
+    public List<Item> getAll() {
+        return itemService.getAll();
     }
 
-    @GetMapping("/types")
-    public List<ItemType> getAllItemTypes(){
+    @Override
+    public Item getById(Integer id) {
+        return itemService.findById(id);
+    }
+
+    @Override
+    public Item create(Item newEntity) {
+        return itemService.save(newEntity);
+    }
+
+    @Override
+    public Item update(Item entity) {
+        return itemService.save(entity);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteById(Integer id) {
+        itemService.deleteById(id);
+        return ResponseEntity.status(204).build();
+    }
+
+    @Override
+    public List<Item> getAllByType(String type) {
+        return itemService.findAllByType(ItemType.valueOf(type.toUpperCase()));
+    }
+
+    @Override
+    public List<ItemType> getAllTypes() {
         return Arrays.asList(ItemType.values());
-    }
-
-    @GetMapping("/types/{itemType}")
-    public List<Item> getAllByItemType(@PathVariable String itemType){
-        return itemService.findAllByItemType(ItemType.valueOf(itemType.toUpperCase()));
-    }
-
-    @GetMapping("/names/{name}")
-    public Item getItemByName(@PathVariable String name){
-        return itemService.findItemByName(name);
-    }
-
-    @PostMapping
-    public Item createNewItem(@RequestBody Item newItem){
-        return itemService.saveItem(newItem);
-    }
-
-    @PutMapping
-    public Item updateItem(@RequestBody Item item){
-        return itemService.saveItem(item);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteItemById(@PathVariable Integer id){
-        itemService.deleteItemById(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

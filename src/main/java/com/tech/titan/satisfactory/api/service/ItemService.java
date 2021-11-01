@@ -4,13 +4,15 @@ import com.tech.titan.satisfactory.api.exception.ItemNotFoundException;
 import com.tech.titan.satisfactory.api.model.Item;
 import com.tech.titan.satisfactory.api.model.ItemType;
 import com.tech.titan.satisfactory.api.repository.ItemRepository;
+import com.tech.titan.satisfactory.api.service.contract.SearchableService;
+import com.tech.titan.satisfactory.api.service.contract.TypeSearchService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ItemService {
+public class ItemService extends SearchableService<Item> implements TypeSearchService<Item, ItemType> {
 
     private final ItemRepository itemRepository;
 
@@ -18,32 +20,41 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public Item saveItem(Item item){
-        return itemRepository.save(item);
-    }
-
-    public List<Item> getAllItems(){
+    @Override
+    public List<Item> getAll(){
         return itemRepository.findAll();
     }
 
-    public Item findItemById(Integer itemId){
-        return itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
+    @Override
+    public Item findById(Integer id){
+        return itemRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException(id));
     }
 
-    public Item findItemByName(String itemName){
-        return itemRepository.findByName(itemName).orElseThrow(() -> new ItemNotFoundException(itemName));
+    @Override
+    public Item save(Item entity){
+        return itemRepository.save(entity);
     }
 
-    public List<Item> findAllByItemType(ItemType itemType){
-        return itemRepository.findAllByItemType(itemType);
-    }
-
-    public void deleteItemById(Integer itemId){
+    @Override
+    public void deleteById(Integer id){
         try{
-            itemRepository.deleteById(itemId);
+            itemRepository.deleteById(id);
         } catch(EmptyResultDataAccessException e){
-            throw new ItemNotFoundException(itemId);
+            throw new ItemNotFoundException(id);
         }
-
     }
+
+    @Override
+    public Item findByName(String name){
+        return itemRepository.findByName(name)
+                .orElseThrow(() -> new ItemNotFoundException(name));
+    }
+
+    @Override
+    public List<Item> findAllByType(ItemType type){
+        return itemRepository.findAllByItemType(type);
+    }
+
+
 }

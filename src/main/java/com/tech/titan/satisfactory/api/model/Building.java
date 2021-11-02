@@ -2,6 +2,7 @@ package com.tech.titan.satisfactory.api.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "buildings", uniqueConstraints = {
@@ -49,5 +50,27 @@ public class Building implements Serializable {
 
     public void setBuildingType(BuildingType buildingType) {
         this.buildingType = buildingType;
+    }
+
+    @Override
+    public String toString() {
+        return "Building{" +
+                "buildingId=" + buildingId +
+                ", name='" + name + '\'' +
+                ", buildingType=" + buildingType +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Building building = (Building) o;
+        return Objects.equals(buildingId, building.buildingId) && Objects.equals(name, building.name) && buildingType == building.buildingType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(buildingId, name, buildingType);
     }
 }

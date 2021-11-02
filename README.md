@@ -14,4 +14,6 @@ efficiency.
 ## Roadmap
 - [x] Entity Design
 - [x] Initial REST Design
-- [ ] HATEOAS Refactor
+- [x] HATEOAS Refactor
+- [ ] Connect to RDBMS
+- [ ] Containerize and Deploy the API

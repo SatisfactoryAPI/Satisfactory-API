@@ -1,5 +1,7 @@
 package com.tech.titan.satisfactory.api.model;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,7 +10,7 @@ import java.util.Objects;
 @Table(name = "buildings", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name"),
 })
-public class Building implements Serializable {
+public class Building extends RepresentationModel<Building> implements Serializable {
 
     private Integer buildingId;
     private String name;

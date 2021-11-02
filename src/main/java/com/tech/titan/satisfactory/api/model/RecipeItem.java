@@ -1,6 +1,7 @@
 package com.tech.titan.satisfactory.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "recipe_items")
-public class RecipeItem implements Serializable {
+public class RecipeItem extends RepresentationModel<RecipeItem> implements Serializable {
 
     private Integer recipeItemId;
 

@@ -1,6 +1,7 @@
 package com.tech.titan.satisfactory.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.util.Objects;
 @Table(name = "items", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name"),
 })
-public class Item implements Serializable {
+public class Item extends RepresentationModel<Item> implements Serializable {
 
     private Integer itemId;
     private String name;

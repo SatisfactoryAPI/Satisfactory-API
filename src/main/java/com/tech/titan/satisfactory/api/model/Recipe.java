@@ -1,6 +1,8 @@
 package com.tech.titan.satisfactory.api.model;
 
 
+import org.springframework.hateoas.RepresentationModel;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "recipes")
-public class Recipe implements Serializable {
+public class Recipe extends RepresentationModel<Recipe> implements Serializable {
 
     private Integer recipeId;
     private String name;

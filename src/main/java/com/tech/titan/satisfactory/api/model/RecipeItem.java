@@ -1,56 +1,93 @@
 package com.tech.titan.satisfactory.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "recipe_items")
-@AssociationOverrides({
-        @AssociationOverride(name = "items",
-            joinColumns = @JoinColumn(name = "item_id")),
-        @AssociationOverride(name = "recipes",
-            joinColumns = @JoinColumn(name = "recipe_id"))
-})
 public class RecipeItem implements Serializable {
-    private RecipeItemId recipeItemId = new RecipeItemId();
+
+    private Integer recipeItemId;
+
+    private Item item;
+
+    @JsonIgnore
+    private Recipe recipe;
+
     private double quantity;
 
     public RecipeItem() {
     }
 
-    @EmbeddedId
-    public RecipeItemId getRecipeItemId() {
+    public RecipeItem(Integer recipeItemId, Item item, Recipe recipe, double quantity) {
+        this.recipeItemId = recipeItemId;
+        this.item = item;
+        this.recipe = recipe;
+        this.quantity = quantity;
+    }
+
+    @Id
+    @GeneratedValue
+    @Column(name = "recipe_item_id")
+    public Integer getRecipeItemId(){
         return recipeItemId;
     }
 
-    public void setRecipeItemId(RecipeItemId recipeItemId) {
+    public void setRecipeItemId(Integer recipeItemId){
         this.recipeItemId = recipeItemId;
     }
 
-    @Transient
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "item_id")
     public Item getItem(){
-        return getRecipeItemId().getItem();
+        return item;
     }
 
     public void setItem(Item item){
-        getRecipeItemId().setItem(item);
+        this.item = item;
     }
 
-    @Transient
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "recipe_id")
     public Recipe getRecipe(){
-        return getRecipeItemId().getRecipe();
+        return recipe;
     }
 
     public void setRecipe(Recipe recipe){
-        getRecipeItemId().setRecipe(recipe);
+        this.recipe = recipe;
     }
 
-    @Column(name = "quantity", nullable = false)
     public double getQuantity() {
         return quantity;
     }
 
     public void setQuantity(double quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "RecipeItem{" +
+                "recipeItemId=" + recipeItemId +
+                ", item=" + item +
+                ", recipe=" + recipe +
+                ", quantity=" + quantity +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeItem that = (RecipeItem) o;
+        return Double.compare(that.quantity, quantity) == 0 && Objects.equals(recipeItemId, that.recipeItemId) && Objects.equals(item, that.item) && Objects.equals(recipe, that.recipe);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(recipeItemId, item, recipe, quantity);
     }
 }

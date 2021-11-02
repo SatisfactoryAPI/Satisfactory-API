@@ -1,8 +1,10 @@
 package com.tech.titan.satisfactory.api.model;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "recipes")
@@ -10,12 +12,16 @@ public class Recipe implements Serializable {
 
     private Integer recipeId;
     private String name;
-    private List<RecipeItem> items;
+    private List<RecipeItem> items; //
     private Building building;
     private Item product;
     private double output;
 
     public Recipe() {
+    }
+
+    public Recipe(Integer recipeId) {
+        this.recipeId = recipeId;
     }
 
     public Recipe(String name, List<RecipeItem> items, Building building, Item product, double output) {
@@ -46,7 +52,7 @@ public class Recipe implements Serializable {
         this.name = name;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "recipeItemId.recipe")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe")
     public List<RecipeItem> getItems() {
         return items;
     }
@@ -55,7 +61,7 @@ public class Recipe implements Serializable {
         this.items = items;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     public Building getBuilding() {
         return building;
     }
@@ -64,7 +70,7 @@ public class Recipe implements Serializable {
         this.building = building;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     public Item getProduct() {
         return product;
     }
@@ -80,5 +86,30 @@ public class Recipe implements Serializable {
 
     public void setOutput(double output) {
         this.output = output;
+    }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "recipeId=" + recipeId +
+                ", name='" + name + '\'' +
+                ", items=" + items +
+                ", building=" + building +
+                ", product=" + product +
+                ", output=" + output +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recipe recipe = (Recipe) o;
+        return Double.compare(recipe.output, output) == 0 && Objects.equals(recipeId, recipe.recipeId) && Objects.equals(name, recipe.name) && Objects.equals(items, recipe.items) && Objects.equals(building, recipe.building) && Objects.equals(product, recipe.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(recipeId, name, items, building, product, output);
     }
 }

@@ -1,7 +1,10 @@
 package com.tech.titan.satisfactory.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +16,12 @@ public class Item implements Serializable {
     private Integer itemId;
     private String name;
     private ItemType itemType;
+
+    @JsonIgnore
+    private List<Recipe> recipes;
+
+    @JsonIgnore
+    private List<RecipeItem> items;
 
     public Item(){
 
@@ -61,6 +70,24 @@ public class Item implements Serializable {
 
     public void setItemType(ItemType itemType) {
         this.itemType = itemType;
+    }
+
+    @OneToMany(mappedBy = "product")
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+    public List<RecipeItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<RecipeItem> items) {
+        this.items = items;
     }
 
     @Override

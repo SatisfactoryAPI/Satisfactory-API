@@ -1,6 +1,7 @@
 package com.tech.titan.satisfactory.api.service;
 
 import com.tech.titan.satisfactory.api.exception.RecipeNotFoundException;
+import com.tech.titan.satisfactory.api.model.Item;
 import com.tech.titan.satisfactory.api.model.Recipe;
 import com.tech.titan.satisfactory.api.model.RecipeItem;
 import com.tech.titan.satisfactory.api.repository.RecipeItemRepository;
@@ -10,6 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RecipeService extends SearchableService<Recipe> {
@@ -45,10 +47,15 @@ public class RecipeService extends SearchableService<Recipe> {
         entity = saveNewRecipe(entity);
         Integer id = entity.getRecipeId();
 
-        recipeItems.forEach(item -> 
-            item.setRecipe(new Recipe(id))
-        );
-        entity.setItems(recipeItemRepository.saveAll(recipeItems));
+        entity.setItems(recipeItemRepository.saveAll(
+                recipeItems.stream().map(item ->
+                        new RecipeItem(
+                            new Item(item.getItem().getItemId()),
+                            new Recipe(id),
+                            item.getQuantity()
+                        ))
+                        .collect(Collectors.toList())));
+
         return entity;
     }
 

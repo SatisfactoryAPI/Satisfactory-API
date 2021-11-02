@@ -1,13 +1,20 @@
 package com.tech.titan.satisfactory.api.controller;
 
 import com.tech.titan.satisfactory.api.controller.contract.SearchableController;
+import com.tech.titan.satisfactory.api.model.Building;
 import com.tech.titan.satisfactory.api.model.Recipe;
 import com.tech.titan.satisfactory.api.model.RecipeItem;
 import com.tech.titan.satisfactory.api.service.RecipeService;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @CrossOrigin("*")
@@ -21,28 +28,62 @@ public class RecipeController extends SearchableController<Recipe> {
     }
 
     @Override
-    public Recipe getByName(String name) {
-        return recipeService.findByName(name);
+    public CollectionModel<Recipe> getAll() {
+        List<Recipe> recipes = recipeService.getAll();
+
+        for(Recipe recipe : recipes){
+            for(final RecipeItem recipeItem: recipe.getItems()){
+                Link selfLink = linkTo(methodOn(ItemController.class)
+                        .getById(recipeItem.getItem().getItemId())).withSelfRel();
+                recipeItem.add(selfLink);
+            }
+
+            recipe.getBuilding().add(linkTo(methodOn(BuildingController.class)
+                    .getById(recipe.getBuilding().getBuildingId())).withSelfRel());
+
+            recipe.getProduct().add(linkTo(methodOn(ItemController.class)
+                    .getById(recipe.getProduct().getItemId())).withSelfRel());
+
+            recipe.add(linkTo(methodOn(RecipeController.class)
+                    .getById(recipe.getRecipeId())).withSelfRel());
+        }
+
+        Link link = linkTo(methodOn(RecipeController.class).getAll()).withSelfRel();
+
+        return CollectionModel.of(recipes, link);
     }
 
     @Override
-    public List<Recipe> getAll() {
-        return recipeService.getAll();
+    public EntityModel<Recipe> getById(Integer id) {
+        Recipe recipe = recipeService.findById(id);
+
+        for(final RecipeItem recipeItem: recipe.getItems()){
+            Link selfLink = linkTo(methodOn(ItemController.class)
+                    .getById(recipeItem.getItem().getItemId())).withSelfRel();
+            recipeItem.add(selfLink);
+        }
+
+        recipe.getBuilding().add(linkTo(methodOn(BuildingController.class)
+                .getById(recipe.getBuilding().getBuildingId())).withSelfRel());
+
+        recipe.getProduct().add(linkTo(methodOn(ItemController.class)
+                .getById(recipe.getProduct().getItemId())).withSelfRel());
+
+        recipe.add(linkTo(methodOn(RecipeController.class)
+                .getById(id)).withSelfRel());
+
+        return EntityModel.of(recipe);
     }
 
     @Override
-    public Recipe getById(Integer id) {
-        return recipeService.findById(id);
+    public EntityModel<Recipe> create(Recipe newEntity) {
+        System.out.println(newEntity);
+        return EntityModel.of(recipeService.save(newEntity));
     }
 
     @Override
-    public Recipe create(Recipe newEntity) {
-        return recipeService.save(newEntity);
-    }
-
-    @Override
-    public Recipe update(Recipe entity) {
-        return recipeService.save(entity);
+    public EntityModel<Recipe> update(Recipe entity) {
+        return EntityModel.of(recipeService.save(entity));
     }
 
     @Override

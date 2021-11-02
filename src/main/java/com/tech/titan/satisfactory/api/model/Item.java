@@ -28,6 +28,10 @@ public class Item extends RepresentationModel<Item> implements Serializable {
 
     }
 
+    public Item(Integer itemId){
+        this.itemId = itemId;
+    }
+
     public Item(String itemName) {
         this.name = itemName;
     }

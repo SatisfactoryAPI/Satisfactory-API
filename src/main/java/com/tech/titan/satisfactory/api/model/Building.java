@@ -1,9 +1,11 @@
 package com.tech.titan.satisfactory.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +17,9 @@ public class Building extends RepresentationModel<Building> implements Serializa
     private Integer buildingId;
     private String name;
     private BuildingType buildingType;
+
+    @JsonIgnore
+    private List<Recipe> recipes;
 
     public Building() {
     }
@@ -52,6 +57,15 @@ public class Building extends RepresentationModel<Building> implements Serializa
 
     public void setBuildingType(BuildingType buildingType) {
         this.buildingType = buildingType;
+    }
+
+    @OneToMany(mappedBy = "building")
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
     }
 
     @Override

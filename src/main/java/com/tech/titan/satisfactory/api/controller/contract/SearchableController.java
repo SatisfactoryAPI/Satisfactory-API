@@ -1,4 +1,4 @@
 package com.tech.titan.satisfactory.api.controller.contract;
 
-public abstract class SearchableController<T> implements SatisfactoryRestController<T>, NameSearchController<T> {
+public abstract class SearchableController<T> implements SatisfactoryRestController<T> {
 }

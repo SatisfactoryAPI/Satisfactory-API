@@ -14,7 +14,7 @@ public class Recipe extends RepresentationModel<Recipe> implements Serializable 
 
     private Integer recipeId;
     private String name;
-    private List<RecipeItem> items; //
+    private List<RecipeItem> items;
     private Building building;
     private Item product;
     private double output;
@@ -54,7 +54,7 @@ public class Recipe extends RepresentationModel<Recipe> implements Serializable 
         this.name = name;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe")
+    @OneToMany(mappedBy = "recipe")
     public List<RecipeItem> getItems() {
         return items;
     }
